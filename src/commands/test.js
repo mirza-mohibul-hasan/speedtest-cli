@@ -1,3 +1,5 @@
+import { setTimeout as delay } from 'node:timers/promises';
+
 import {
   runDownloadTest,
   getServer,
@@ -125,6 +127,52 @@ function formatCsvRow(result) {
   ].join(',');
 }
 
+function parseWatchSeconds(value) {
+  if (!value) {
+    return null;
+  }
+
+  const parsed = Number.parseInt(value, 10);
+
+  if (!Number.isInteger(parsed) || parsed <= 0) {
+    throw new TypeError('--watch must be a positive number of seconds.');
+  }
+
+  return parsed;
+}
+
+function averageMetric(results, selector) {
+  if (results.length === 0) {
+    return 0;
+  }
+
+  return Number((results.reduce((sum, result) => sum + selector(result), 0) / results.length).toFixed(2));
+}
+
+function getRunningAverage(results) {
+  return {
+    download: {
+      speed: averageMetric(results, (result) => result.download.speed),
+      unit: 'Mbps',
+    },
+    ping: {
+      avg: averageMetric(results, (result) => result.ping.avg),
+      jitter: averageMetric(results, (result) => result.ping.jitter),
+    },
+    runs: results.length,
+    upload: {
+      speed: averageMetric(results, (result) => result.upload.speed),
+      unit: 'Mbps',
+    },
+  };
+}
+
+function printRunningAverage(average) {
+  console.log(
+    `Running average (${average.runs} runs): ping ${average.ping.avg} ms, download ${average.download.speed} Mbps, upload ${average.upload.speed} Mbps`,
+  );
+}
+
 export async function runSpeedTest({ quiet = false, serverRegion } = {}) {
   const timestamp = new Date().toISOString();
   const server = await resolveServer(serverRegion);
@@ -145,6 +193,64 @@ export async function runSpeedTest({ quiet = false, serverRegion } = {}) {
   };
 }
 
+export async function runWatchMode({
+  csv = false,
+  intervalSeconds,
+  json = false,
+  maxRuns = Number.POSITIVE_INFINITY,
+  serverRegion,
+} = {}) {
+  const results = [];
+  let shouldStop = false;
+
+  function stop() {
+    shouldStop = true;
+  }
+
+  process.once('SIGINT', stop);
+
+  try {
+    while (!shouldStop && results.length < maxRuns) {
+      const quiet = json || csv;
+      const result = await runSpeedTest({ quiet, serverRegion });
+
+      saveResult(result);
+      results.push(result);
+
+      const average = getRunningAverage(results);
+
+      if (json) {
+        console.log(JSON.stringify({ average, result, run: results.length }));
+      } else if (csv) {
+        console.log(formatCsvRow(result));
+      } else {
+        console.log();
+        showResults(result);
+        printRunningAverage(average);
+      }
+
+      if (shouldStop || results.length >= maxRuns) {
+        break;
+      }
+
+      await delay(intervalSeconds * 1000);
+    }
+  } finally {
+    process.removeListener('SIGINT', stop);
+  }
+
+  if (results.length > 0 && !json && !csv) {
+    console.log();
+    console.log('Final summary');
+    printRunningAverage(getRunningAverage(results));
+  }
+
+  return {
+    average: getRunningAverage(results),
+    runs: results.length,
+  };
+}
+
 export function registerTestCommand(program) {
   program
     .command('test')
@@ -152,6 +258,7 @@ export function registerTestCommand(program) {
     .option('--json', 'print raw JSON without UI decorations')
     .option('--csv', 'print a single CSV row without UI decorations')
     .option('--server <region>', 'server region or alias to use instead of auto-selection')
+    .option('--watch <seconds>', 're-run the full test every N seconds until Ctrl+C')
     .action(async (options) => {
       if (options.json && options.csv) {
         console.error('Choose either --json or --csv, not both.');
@@ -160,10 +267,29 @@ export function registerTestCommand(program) {
       }
 
       const quiet = options.json || options.csv;
+      let watchSeconds;
+
+      try {
+        watchSeconds = parseWatchSeconds(options.watch);
+      } catch (error) {
+        console.error(error.message);
+        process.exitCode = 1;
+        return;
+      }
 
       if (!quiet) {
         console.log(renderBanner());
         console.log();
+      }
+
+      if (watchSeconds) {
+        await runWatchMode({
+          csv: options.csv,
+          intervalSeconds: watchSeconds,
+          json: options.json,
+          serverRegion: options.server,
+        });
+        return;
       }
 
       let result;

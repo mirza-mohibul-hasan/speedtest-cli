@@ -6,13 +6,21 @@ const DEFAULT_CONFIG = {
   unit: 'Mbps',
 };
 
-const store = new Conf({
-  defaults: {
-    config: DEFAULT_CONFIG,
-    history: [],
-  },
-  projectName: 'speedtest-cli',
-});
+let store;
+
+function getStore() {
+  if (!store) {
+    store = new Conf({
+      defaults: {
+        config: DEFAULT_CONFIG,
+        history: [],
+      },
+      projectName: 'speedtest-cli',
+    });
+  }
+
+  return store;
+}
 
 function normalizeLimit(limit) {
   const parsed = Number.parseInt(limit, 10);
@@ -27,23 +35,23 @@ function normalizeLimit(limit) {
 export function getConfig() {
   return {
     ...DEFAULT_CONFIG,
-    ...store.get('config', {}),
+    ...getStore().get('config', {}),
   };
 }
 
 export function saveConfig(config) {
-  store.set('config', {
+  getStore().set('config', {
     ...getConfig(),
     ...config,
   });
 }
 
 export function resetConfig() {
-  store.set('config', DEFAULT_CONFIG);
+  getStore().set('config', DEFAULT_CONFIG);
 }
 
 export function loadHistory({ limit } = {}) {
-  const history = store.get('history', []);
+  const history = getStore().get('history', []);
 
   if (!limit) {
     return history;
@@ -54,13 +62,13 @@ export function loadHistory({ limit } = {}) {
 
 export function saveResult(result) {
   const config = getConfig();
-  const history = store.get('history', []);
+  const history = getStore().get('history', []);
   const nextHistory = [result, ...history].slice(0, config.historyLimit);
 
-  store.set('history', nextHistory);
+  getStore().set('history', nextHistory);
   return result;
 }
 
 export function clearHistory() {
-  store.set('history', []);
+  getStore().set('history', []);
 }
