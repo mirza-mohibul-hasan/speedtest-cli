@@ -8,7 +8,8 @@
     "speedtest": "./bin/speedtest.js"
   },
   "scripts": {
-    "smoke": "node bin/speedtest.js"
+    "smoke": "node bin/speedtest.js",
+    "ui:demo": "node scripts/ui-demo.js"
   },
   "keywords": [
     "speedtest",
