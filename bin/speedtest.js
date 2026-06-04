@@ -1,3 +1,5 @@
 #!/usr/bin/env node
 
-import '../src/index.js';
+import { runCli } from '../src/index.js';
+
+await runCli(process.argv);

@@ -1,1 +1,1 @@
-export {};
+export { renderBanner } from './banner.js';
