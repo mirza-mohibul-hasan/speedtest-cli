@@ -11,6 +11,7 @@ import {
   renderBanner,
   showResults,
 } from '../ui/index.js';
+import { saveResult } from '../utils/index.js';
 
 const DEFAULT_SERVER = {
   name: 'Cloudflare',
@@ -141,6 +142,7 @@ export function registerTestCommand(program) {
 
       try {
         result = await runSpeedTest({ quiet });
+        saveResult(result);
       } catch (error) {
         console.error(error.message);
         process.exitCode = 1;
