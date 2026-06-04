@@ -1,9 +1,28 @@
 {
-  "name": "speedtest-cli",
-  "version": "0.1.0",
-  "description": "A production-grade Internet speed test CLI for Node.js.",
+  "name": "@mirza-mohibul-hasan/speedtest-cli",
+  "version": "1.0.0",
+  "description": "A production-grade internet speed test CLI for ping, download, upload, history, config, and watch mode.",
   "type": "module",
   "license": "MIT",
+  "author": "Mirza Mohibul Hasan",
+  "homepage": "https://github.com/mirza-mohibul-hasan/speedtest-cli#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mirza-mohibul-hasan/speedtest-cli.git"
+  },
+  "bugs": {
+    "url": "https://github.com/mirza-mohibul-hasan/speedtest-cli/issues"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "files": [
+    "bin",
+    "src",
+    "CHANGELOG.md",
+    "LICENSE",
+    "README.md"
+  ],
   "bin": {
     "speedtest": "./bin/speedtest.js"
   },
@@ -17,7 +36,13 @@
     "speedtest",
     "internet",
     "bandwidth",
+    "cloudflare",
+    "download",
+    "history",
     "latency",
+    "network",
+    "ping",
+    "upload",
     "cli"
   ],
   "dependencies": {

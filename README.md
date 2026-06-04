@@ -9,7 +9,7 @@ A production-grade Node.js internet speed test CLI with ping, download, upload, 
 ## Install
 
 ```powershell
-npm install -g speedtest-cli
+npm install -g @mirza-mohibul-hasan/speedtest-cli
 ```
 
 Run without installing:
