@@ -64,6 +64,7 @@ async function measureHeadRequest(endpoint, timeoutMs) {
 
 export async function runPingTest({
   endpoint = DEFAULT_ENDPOINT,
+  onProgress = () => {},
   requests = DEFAULT_REQUEST_COUNT,
   timeoutMs = DEFAULT_TIMEOUT_MS,
 } = {}) {
@@ -71,10 +72,21 @@ export async function runPingTest({
   assertPositiveInteger(requests, 'requests');
   assertPositiveInteger(timeoutMs, 'timeoutMs');
 
+  if (typeof onProgress !== 'function') {
+    throw new TypeError('onProgress must be a function.');
+  }
+
   const samples = [];
 
   for (let requestIndex = 0; requestIndex < requests; requestIndex += 1) {
-    samples.push(await measureHeadRequest(endpoint, timeoutMs));
+    const latency = await measureHeadRequest(endpoint, timeoutMs);
+
+    samples.push(latency);
+    onProgress({
+      completed: requestIndex + 1,
+      latency: roundMilliseconds(latency),
+      total: requests,
+    });
   }
 
   return {

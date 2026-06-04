@@ -124,7 +124,7 @@ async function uploadChunk({
   });
 
   try {
-    await axios.post(buildUploadUrl(endpoint, chunkSizeBytes, workerId), body, {
+    const response = await axios.post(buildUploadUrl(endpoint, chunkSizeBytes, workerId), body, {
       headers: {
         'cache-control': 'no-cache',
         'content-length': String(chunkSizeBytes),
@@ -136,11 +136,13 @@ async function uploadChunk({
       maxContentLength: Number.POSITIVE_INFINITY,
       signal,
       timeout: timeoutMs,
-      validateStatus: (status) => status >= 200 && status < 300,
+      validateStatus: (status) => (status >= 200 && status < 300) || status === 429,
     });
+
+    return response.status !== 429;
   } catch (error) {
     if (signal.aborted || isAbortError(error)) {
-      return;
+      return false;
     }
 
     throw new Error(`Unable to upload test chunk: ${error.message}`, {
@@ -160,7 +162,7 @@ async function runUploadWorker({
   onBytes,
 }) {
   while (!signal.aborted && performance.now() < deadline) {
-    await uploadChunk({
+    const shouldContinue = await uploadChunk({
       endpoint,
       chunkSizeBytes,
       streamChunkBytes,
@@ -169,6 +171,10 @@ async function runUploadWorker({
       timeoutMs,
       onBytes,
     });
+
+    if (!shouldContinue) {
+      break;
+    }
   }
 }
 

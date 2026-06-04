@@ -119,13 +119,18 @@ async function downloadChunk({ endpoint, chunkSizeBytes, workerId, signal, timeo
       responseType: 'stream',
       signal,
       timeout: timeoutMs,
-      validateStatus: (status) => status >= 200 && status < 300,
+      validateStatus: (status) => (status >= 200 && status < 300) || status === 429,
     });
 
+    if (response.status === 429) {
+      return false;
+    }
+
     await streamResponse(response, signal, onBytes);
+    return true;
   } catch (error) {
     if (signal.aborted || isAbortError(error)) {
-      return;
+      return false;
     }
 
     throw new Error(`Unable to download test chunk: ${error.message}`, {
@@ -144,7 +149,7 @@ async function runDownloadWorker({
   onBytes,
 }) {
   while (!signal.aborted && performance.now() < deadline) {
-    await downloadChunk({
+    const shouldContinue = await downloadChunk({
       endpoint,
       chunkSizeBytes,
       workerId,
@@ -152,6 +157,10 @@ async function runDownloadWorker({
       timeoutMs,
       onBytes,
     });
+
+    if (!shouldContinue) {
+      break;
+    }
   }
 }
 
