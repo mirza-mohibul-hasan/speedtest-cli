@@ -24,7 +24,7 @@
     "README.md"
   ],
   "bin": {
-    "speedtest": "./bin/speedtest.js"
+    "speedtest": "bin/speedtest.js"
   },
   "scripts": {
     "format": "prettier --write .",
