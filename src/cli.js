@@ -5,9 +5,7 @@ import { Command } from 'commander';
 import { registerCommands } from './commands/index.js';
 import { renderBanner } from './ui/index.js';
 
-const packageJson = JSON.parse(
-  readFileSync(new URL('../package.json', import.meta.url), 'utf8'),
-);
+const packageJson = JSON.parse(readFileSync(new URL('../package.json', import.meta.url), 'utf8'));
 
 export function createProgram() {
   const program = new Command();

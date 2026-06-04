@@ -146,7 +146,9 @@ function averageMetric(results, selector) {
     return 0;
   }
 
-  return Number((results.reduce((sum, result) => sum + selector(result), 0) / results.length).toFixed(2));
+  return Number(
+    (results.reduce((sum, result) => sum + selector(result), 0) / results.length).toFixed(2),
+  );
 }
 
 function getRunningAverage(results) {
@@ -176,7 +178,9 @@ function printRunningAverage(average) {
 export async function runSpeedTest({ quiet = false, serverRegion } = {}) {
   const timestamp = new Date().toISOString();
   const server = await resolveServer(serverRegion);
-  const ping = quiet ? await runPingTest({ endpoint: server.endpoints.ping }) : await runPingPhase(server);
+  const ping = quiet
+    ? await runPingTest({ endpoint: server.endpoints.ping })
+    : await runPingPhase(server);
   const download = quiet
     ? await runDownloadTest(() => {}, { endpoint: server.endpoints.download })
     : await runDownloadPhase(server);

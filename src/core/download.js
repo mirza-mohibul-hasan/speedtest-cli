@@ -164,13 +164,16 @@ async function runDownloadWorker({
   }
 }
 
-export async function runDownloadTest(onProgress = () => {}, {
-  endpoint = DEFAULT_ENDPOINT,
-  workers = DEFAULT_WORKERS,
-  chunkSizeBytes = DEFAULT_CHUNK_SIZE_BYTES,
-  durationMs = DEFAULT_DURATION_MS,
-  timeoutMs = DEFAULT_TIMEOUT_MS,
-} = {}) {
+export async function runDownloadTest(
+  onProgress = () => {},
+  {
+    endpoint = DEFAULT_ENDPOINT,
+    workers = DEFAULT_WORKERS,
+    chunkSizeBytes = DEFAULT_CHUNK_SIZE_BYTES,
+    durationMs = DEFAULT_DURATION_MS,
+    timeoutMs = DEFAULT_TIMEOUT_MS,
+  } = {},
+) {
   assertValidEndpoint(endpoint);
   assertPositiveInteger(workers, 'workers');
   assertPositiveInteger(chunkSizeBytes, 'chunkSizeBytes');

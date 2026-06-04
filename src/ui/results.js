@@ -52,8 +52,14 @@ export function formatResultsTable(data) {
   table.push(
     [chalk.cyan('Ping'), `${colorLatency(data.ping.avg)} ms`],
     [chalk.cyan('Jitter'), `${colorLatency(data.ping.jitter)} ms`],
-    [chalk.blue('Download'), formatMetric(colorSpeed('download', data.download.speed), data.download.unit)],
-    [chalk.magenta('Upload'), formatMetric(colorSpeed('upload', data.upload.speed), data.upload.unit)],
+    [
+      chalk.blue('Download'),
+      formatMetric(colorSpeed('download', data.download.speed), data.download.unit),
+    ],
+    [
+      chalk.magenta('Upload'),
+      formatMetric(colorSpeed('upload', data.upload.speed), data.upload.unit),
+    ],
     [chalk.gray('Server'), formatServer(data.server)],
     [chalk.gray('Timestamp'), formatTimestamp(data.timestamp)],
   );

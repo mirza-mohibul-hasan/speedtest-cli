@@ -178,14 +178,17 @@ async function runUploadWorker({
   }
 }
 
-export async function runUploadTest(onProgress = () => {}, {
-  endpoint = DEFAULT_ENDPOINT,
-  workers = DEFAULT_WORKERS,
-  chunkSizeBytes = DEFAULT_CHUNK_SIZE_BYTES,
-  streamChunkBytes = DEFAULT_STREAM_CHUNK_BYTES,
-  durationMs = DEFAULT_DURATION_MS,
-  timeoutMs = DEFAULT_TIMEOUT_MS,
-} = {}) {
+export async function runUploadTest(
+  onProgress = () => {},
+  {
+    endpoint = DEFAULT_ENDPOINT,
+    workers = DEFAULT_WORKERS,
+    chunkSizeBytes = DEFAULT_CHUNK_SIZE_BYTES,
+    streamChunkBytes = DEFAULT_STREAM_CHUNK_BYTES,
+    durationMs = DEFAULT_DURATION_MS,
+    timeoutMs = DEFAULT_TIMEOUT_MS,
+  } = {},
+) {
   assertValidEndpoint(endpoint);
   assertPositiveInteger(workers, 'workers');
   assertPositiveInteger(chunkSizeBytes, 'chunkSizeBytes');

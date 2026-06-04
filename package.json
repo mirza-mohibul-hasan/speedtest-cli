@@ -8,6 +8,8 @@
     "speedtest": "./bin/speedtest.js"
   },
   "scripts": {
+    "format": "prettier --write .",
+    "lint": "eslint .",
     "smoke": "node bin/speedtest.js",
     "ui:demo": "node scripts/ui-demo.js"
   },
@@ -27,5 +29,9 @@
     "conf": "^12.0.0",
     "gradient-string": "^3.0.0",
     "ora": "^8.2.0"
+  },
+  "devDependencies": {
+    "eslint": "^8.57.1",
+    "prettier": "^3.8.3"
   }
 }

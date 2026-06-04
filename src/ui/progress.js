@@ -14,15 +14,18 @@ function createPayload(phase, unit, payload = {}) {
   };
 }
 
-export function createPhaseProgress(phase, {
-  total = 100,
-  unit = '',
-  clearOnComplete = false,
-  hideCursor = true,
-  noTTYOutput = false,
-  notTTYSchedule = 2000,
-  stream = process.stderr,
-} = {}) {
+export function createPhaseProgress(
+  phase,
+  {
+    total = 100,
+    unit = '',
+    clearOnComplete = false,
+    hideCursor = true,
+    noTTYOutput = false,
+    notTTYSchedule = 2000,
+    stream = process.stderr,
+  } = {},
+) {
   const theme = getPhaseTheme(phase);
   let started = false;
 
@@ -31,7 +34,8 @@ export function createPhaseProgress(phase, {
       barCompleteChar: '=',
       barIncompleteChar: '-',
       clearOnComplete,
-      format: '{label} |' + theme.color('{bar}') + '| {percentage}% | {value}/{total} {unit} {detail}',
+      format:
+        '{label} |' + theme.color('{bar}') + '| {percentage}% | {value}/{total} {unit} {detail}',
       hideCursor,
       noTTYOutput,
       notTTYSchedule,

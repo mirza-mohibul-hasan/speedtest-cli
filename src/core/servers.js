@@ -76,7 +76,9 @@ export async function selectFastestServer({ requests = 2, candidates = servers }
     }),
   );
 
-  const fastest = results.reduce((best, result) => (result.ping.avg < best.ping.avg ? result : best));
+  const fastest = results.reduce((best, result) =>
+    result.ping.avg < best.ping.avg ? result : best,
+  );
 
   return {
     ...fastest.server,
