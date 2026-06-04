@@ -86,11 +86,27 @@ async function runUploadPhase() {
   }
 }
 
-export async function runSpeedTest() {
+function formatCsvRow(result) {
+  return [
+    result.timestamp,
+    result.server.name,
+    result.server.region,
+    result.ping.avg,
+    result.ping.min,
+    result.ping.max,
+    result.ping.jitter,
+    result.download.speed,
+    result.download.unit,
+    result.upload.speed,
+    result.upload.unit,
+  ].join(',');
+}
+
+export async function runSpeedTest({ quiet = false } = {}) {
   const timestamp = new Date().toISOString();
-  const ping = await runPingPhase();
-  const download = await runDownloadPhase();
-  const upload = await runUploadPhase();
+  const ping = quiet ? await runPingTest() : await runPingPhase();
+  const download = quiet ? await runDownloadTest() : await runDownloadPhase();
+  const upload = quiet ? await runUploadTest() : await runUploadPhase();
 
   return {
     download,
@@ -105,17 +121,39 @@ export function registerTestCommand(program) {
   program
     .command('test')
     .description('Run a full ping, download, and upload speed test.')
-    .action(async () => {
-      console.log(renderBanner());
-      console.log();
+    .option('--json', 'print raw JSON without UI decorations')
+    .option('--csv', 'print a single CSV row without UI decorations')
+    .action(async (options) => {
+      if (options.json && options.csv) {
+        console.error('Choose either --json or --csv, not both.');
+        process.exitCode = 1;
+        return;
+      }
+
+      const quiet = options.json || options.csv;
+
+      if (!quiet) {
+        console.log(renderBanner());
+        console.log();
+      }
 
       let result;
 
       try {
-        result = await runSpeedTest();
+        result = await runSpeedTest({ quiet });
       } catch (error) {
         console.error(error.message);
         process.exitCode = 1;
+        return;
+      }
+
+      if (options.json) {
+        console.log(JSON.stringify(result));
+        return;
+      }
+
+      if (options.csv) {
+        console.log(formatCsvRow(result));
         return;
       }
 
