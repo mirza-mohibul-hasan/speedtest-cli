@@ -5,6 +5,7 @@ export {
   createPingProgress,
   createUploadProgress,
 } from './progress.js';
+export { formatResultsTable, showResults } from './results.js';
 export { createPhaseSpinner, withPhaseSpinner } from './spinner.js';
 export {
   colorLatency,
