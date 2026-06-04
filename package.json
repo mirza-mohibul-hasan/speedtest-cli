@@ -1,0 +1,30 @@
+{
+  "name": "speedtest-cli",
+  "version": "0.1.0",
+  "description": "A production-grade Internet speed test CLI for Node.js.",
+  "type": "module",
+  "license": "MIT",
+  "bin": {
+    "speedtest": "./bin/speedtest.js"
+  },
+  "scripts": {
+    "smoke": "node bin/speedtest.js"
+  },
+  "keywords": [
+    "speedtest",
+    "internet",
+    "bandwidth",
+    "latency",
+    "cli"
+  ],
+  "dependencies": {
+    "axios": "^1.17.0",
+    "chalk": "^5.6.2",
+    "cli-progress": "^3.12.0",
+    "cli-table3": "^0.6.5",
+    "commander": "^12.1.0",
+    "conf": "^12.0.0",
+    "gradient-string": "^3.0.0",
+    "ora": "^8.2.0"
+  }
+}

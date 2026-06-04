@@ -1,0 +1,7 @@
+.github/
+coverage/
+dist/
+.env
+.env.*
+*.log
+*.tgz
