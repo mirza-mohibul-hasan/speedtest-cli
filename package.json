@@ -1,6 +1,6 @@
 {
   "name": "@mirza-mohibul-hasan/speedtest-cli",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "A production-grade internet speed test and network diagnostics CLI for ping, download, upload, DNS, TCP, TLS, HTTP, history, config, and watch mode.",
   "type": "module",
   "license": "MIT",
