@@ -4,7 +4,7 @@
 [![npm version](https://img.shields.io/npm/v/speedtest-cli.svg)](https://www.npmjs.com/package/speedtest-cli)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
-A production-grade Node.js internet speed test CLI with ping, download, upload, history, config, server selection, and watch mode.
+A production-grade Node.js internet speed and network diagnostics CLI with ping, download, upload, DNS, TCP, TLS, HTTP reachability, history, config, server selection, and watch mode.
 
 ## Install
 
@@ -32,6 +32,9 @@ speedtest test --json
 speedtest test --csv
 speedtest test --server asia
 speedtest test --watch 30
+speedtest diagnose
+speedtest diagnose github.com --samples 10
+speedtest diagnose https://example.com --json
 speedtest history --last 5
 speedtest config set unit MBps
 speedtest config get unit
@@ -60,6 +63,14 @@ speedtest config reset
 | Timestamp | 2026-06-04T12:00:00.000Z |
 +-----------+--------------------------+
 ```
+
+## Diagnostics
+
+```powershell
+speedtest diagnose [target]
+```
+
+The diagnostics command checks the network path to a target with DNS lookup timing, TCP connect timing, TLS handshake validation, HTTP reachability timing, repeated latency samples, request loss, jitter, and a simple health verdict.
 
 ## Development
 

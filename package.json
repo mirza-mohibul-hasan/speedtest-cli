@@ -1,7 +1,7 @@
 {
   "name": "@mirza-mohibul-hasan/speedtest-cli",
   "version": "1.0.0",
-  "description": "A production-grade internet speed test CLI for ping, download, upload, history, config, and watch mode.",
+  "description": "A production-grade internet speed test and network diagnostics CLI for ping, download, upload, DNS, TCP, TLS, HTTP, history, config, and watch mode.",
   "type": "module",
   "license": "MIT",
   "author": "Mirza Mohibul Hasan",
@@ -38,10 +38,14 @@
     "bandwidth",
     "cloudflare",
     "download",
+    "dns",
     "history",
+    "http",
     "latency",
     "network",
     "ping",
+    "tcp",
+    "tls",
     "upload",
     "cli"
   ],

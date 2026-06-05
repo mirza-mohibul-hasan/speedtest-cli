@@ -1,4 +1,5 @@
 export { renderBanner } from './banner.js';
+export { formatDiagnosticsReport, showDiagnostics } from './diagnostics.js';
 export {
   createDownloadProgress,
   createPhaseProgress,

@@ -11,6 +11,13 @@ export const icons = {
 };
 
 export const phases = {
+  diagnose: {
+    label: 'Diagnose',
+    color: chalk.green,
+    gradient: gradient(['green', 'cyan']),
+    oraColor: 'green',
+    spinner: 'dots',
+  },
   ping: {
     label: 'Ping',
     color: chalk.cyan,
